@@ -6,7 +6,6 @@ For this a button is added to the submission / review workflow tabs when viewing
 ### Prerequisites
 
 - OJS 3.0.x
-- Libreoffice
 - Docker
 
 ### Installing
