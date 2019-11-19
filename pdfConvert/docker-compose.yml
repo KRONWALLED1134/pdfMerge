@@ -1,0 +1,17 @@
+version: '3'
+services:
+  converter:
+    build: ./converter
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./converter/scripts:/converter/scripts
+      - <Your OJS private file directory>:/var/www/files  
+    environment:
+      - FLASK_DEBUG
+    networks:
+      - nginx
+
+networks:
+  nginx:      
+    external: true    

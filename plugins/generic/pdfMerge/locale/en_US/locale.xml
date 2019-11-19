@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE locale SYSTEM "../../../../../lib/pkp/dtd/locale.dtd">
+<locale name="en_US" full_name="U.S. English">
+	<message key="plugins.generic.PdfMergePlugin.displayName">PdfMerge</message>
+	<message key="plugins.generic.PdfMergePlugin.description">This plugin provides the user with the possibility to merge multiple uploaded submission files into one PDF file.</message>
+    <message key="plugins.pdfMerge.openDialogue">Open PdfMerge</message>
+    <message key="plugins.pdfMerge.modal.title">PdfMerge</message>
+    <message key="plugins.pdfMerge.modal.close">Close dialogue</message>
+    <message key="plugins.pdfMerge.modal.spinnerText">Please wait. Merge in progress.</message>
+    <message key="plugins.pdfMerge.modal.successMessage">Files merged successfully. Please refresh the page using the bottom left button to view the merged file in the submission file list.</message>
+    <message key="plugins.pdfMerge.modal.list.title">Submission files</message>
+    <message key="plugins.pdfMerge.modal.mergeFiles">Merge selected files</message>
+    <message key="plugins.pdfMerge.modal.refreshPage">Refresh page</message>
+    <message key="plugins.pdfMerge.modal.error.unknownError">Unknown error occured. For help contact your local IT.</message>
+    <message key="plugins.pdfMerge.modal.error.listEmptyOrSingleValue">Please choose at minimum 2 files to merge.</message>
+</locale>
