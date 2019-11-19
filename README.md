@@ -44,6 +44,16 @@ lib/pkp/templates/workflow/reviewRound.tpl
 
 inside the ```pkp_context_sidebar``` div.
 
+Edit docker-compose.yml
+
+```
+...
+ports:
+  - '5000:5000'
+...
+  - <Your OJS private file directory>:/var/www/files
+...
+```
 Start the converter service 
 
 ```
