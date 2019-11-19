@@ -1,70 +1,75 @@
 <?php
 import('lib.pkp.classes.handler.APIHandler');
-class PdfMergeHandler extends APIHandler {
-	public function __construct() {
-        $this->_handlerPath = 'pdfMerge';
-        $roles = array(ROLE_ID_MANAGER);
+class PdfMergeHandler extends APIHandler
+{
+	public function __construct()
+	{
+		$this->_handlerPath = 'pdfMerge';
+		$roles = array(ROLE_ID_MANAGER);
 		$this->_endpoints = [
 			'GET' => [
-                [
-                    'pattern' => $this->getEndpointPattern(),
-                    'handler' => [$this, 'helloWorld']
-                ],
-		[
-                                        'pattern' => $this->getEndpointPattern() . '/insert/{submissionId}/{stageId}/{reviewRoundId}/{userId}',
-                    'handler' => [$this, 'insertCopyAndDelete'],
-                    'roles' => $roles
-                                ],
-                                [
-                                        'pattern' => $this->getEndpointPattern() . '/insert/{submissionId}/{stageId}/{userId}',
-                    'handler' => [$this, 'insertCopyAndDelete'],
-                    'roles' => $roles
-                                ]	
-		],
+				[
+					'pattern' => $this->getEndpointPattern(),
+					'handler' => [$this, 'helloWorld']
+				],
+				[
+					'pattern' => $this->getEndpointPattern() . '/insert/{submissionId}/{stageId}/{reviewRoundId}/{userId}',
+					'handler' => [$this, 'insertCopyAndDelete'],
+					'roles' => $roles
+				],
+				[
+					'pattern' => $this->getEndpointPattern() . '/insert/{submissionId}/{stageId}/{userId}',
+					'handler' => [$this, 'insertCopyAndDelete'],
+					'roles' => $roles
+				]
+			],
 			'POST' => [
 				[
 					'pattern' => 'insert/{submissionId}/{userId}',
-                    'handler' => [$this, 'insertCopyAndDelete'],
-                    'roles' => $roles
+					'handler' => [$this, 'insertCopyAndDelete'],
+					'roles' => $roles
 				],
 			],
-        ];
-        parent::__construct();
-    }
-    
-    function authorize($request, &$args, $roleAssignments) {
-        $routeName = null;
-        $slimRequest = $this->getSlimRequest();
+		];
+		parent::__construct();
+	}
 
-        if (!is_null($slimRequest) && ($route = $slimRequest->getAttribute('route'))) {
-                $routeName = $route->getName();
-        }
+	function authorize($request, &$args, $roleAssignments)
+	{
+		$routeName = null;
+		$slimRequest = $this->getSlimRequest();
 
-        if ($routeName === 'insertCopyAndDelete') {             
-                import('api.v1.pdfMerge.PdfMergeSecurityPolicy');
-                $this->addPolicy(new PdfMergeSecurityPolicy($request, $args, $roleAssignments));
-        }
+		if (!is_null($slimRequest) && ($route = $slimRequest->getAttribute('route'))) {
+			$routeName = $route->getName();
+		}
 
-        return parent::authorize($request, $args, $roleAssignments);
-    }
+		if ($routeName === 'insertCopyAndDelete') {
+			import('api.v1.pdfMerge.PdfMergeSecurityPolicy');
+			$this->addPolicy(new PdfMergeSecurityPolicy($request, $args, $roleAssignments));
+		}
 
-	function helloWorld($request, $response) {
+		return parent::authorize($request, $args, $roleAssignments);
+	}
+
+	function helloWorld($request, $response)
+	{
 		return $response->withJson(array('ping' => 'pong'), 200);
-    }
+	}
 
-	function insertCopyAndDelete($request, $response, $args) {
-        $submissionId = $args['submissionId'];
-	$stageId = $args['stageId'];
-        $userId = $args['userId'];
-	$reviewRoundId = 0;
+	function insertCopyAndDelete($request, $response, $args)
+	{
+		$submissionId = $args['submissionId'];
+		$stageId = $args['stageId'];
+		$userId = $args['userId'];
+		$reviewRoundId = 0;
 
 		if (isset($args['reviewRoundId'])) {
 			$reviewRoundId = $args['reviewRoundId'];
 		}
 
-		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO'); 
+		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$submissionFile = new SubmissionFile();
-	
+
 		$submissionFile->setRevision(1);
 		$submissionFile->setSubmissionId($submissionId);
 		$submissionFile->setFileType('application/pdf');
@@ -85,17 +90,17 @@ class PdfMergeHandler extends APIHandler {
 		$submissionFile->setDateUploaded($date_object);
 		$submissionFile->setDateModified($date_object);
 
-        import('lib.pkp.classes.file.SubmissionFileManager');
-        
-        // TODO --> Add contextId via param
+		import('lib.pkp.classes.file.SubmissionFileManager');
+
+		// TODO --> Add contextId via param
 		$submissionFileManager = new SubmissionFileManager(1, $submissionId);
 		$sourceFile = $submissionFileManager->getBasePath() . $submissionFile->_fileStageToPath($submissionFile->getFileStage()) . '/converted/merged.pdf';
 		$submissionFile = $submissionFileDao->insertObject($submissionFile, $sourceFile);
 
 		if ($reviewRoundId != 0) {
-			$reviewRoundDao = DAORegistry::getDAO('ReviewRoundDAO'); 
+			$reviewRoundDao = DAORegistry::getDAO('ReviewRoundDAO');
 			$reviewRound = $reviewRoundDao->getById($reviewRoundId);
-			$reviewFilesDao = DAORegistry::getDAO('ReviewFilesDAO'); 
+			$reviewFilesDao = DAORegistry::getDAO('ReviewFilesDAO');
 			$reviewFilesDao->grant($reviewRoundId, $submissionFile->getFileId());
 			$submissionFileDao->assignRevisionToReviewRound($submissionFile->getFileId(), $submissionFile->getRevision(), $reviewRound);
 		}
@@ -105,4 +110,3 @@ class PdfMergeHandler extends APIHandler {
 		return $response->withJson($data, 200);
 	}
 }
-?>

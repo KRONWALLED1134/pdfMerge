@@ -10,9 +10,11 @@ class RestAPIError(Exception):
     def to_response(self):
         return jsonify({'error': self.payload}), self.status_code
 
+
 class BadRequestError(RestAPIError):
     def __init__(self, payload=None):
         super().__init__(400, payload)
+
 
 class InternalServerErrorError(RestAPIError):
     def __init__(self, payload=None):

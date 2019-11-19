@@ -27,4 +27,3 @@ class PdfMergeSecurityPolicy extends ContextPolicy {
 		return $pdfMergeAccessPolicy;
 	}
 }
-?>

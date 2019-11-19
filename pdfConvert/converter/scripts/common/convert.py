@@ -3,12 +3,15 @@ import subprocess
 import re
 import logging
 
+
 def convert_to(folder, filename, timeout=None):
-    args = [libreoffice_exec(), '--headless', '--convert-to', 'pdf', '--outdir', folder + '/converted', folder + '/' + filename]
-    
+    args = [libreoffice_exec(), '--headless', '--convert-to', 'pdf',
+            '--outdir', folder + '/converted', folder + '/' + filename]
+
     gunicorn_logger = logging.getLogger('gunicorn.error')
     gunicorn_logger.info(args)
-    process = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)
+    process = subprocess.run(args, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE, timeout=timeout)
     filename = re.search('-> (.*?) using filter', process.stdout.decode())
 
     if filename is None:
@@ -16,8 +19,10 @@ def convert_to(folder, filename, timeout=None):
     else:
         return filename.group(1)
 
+
 def libreoffice_exec():
     return 'libreoffice'
+
 
 class LibreOfficeError(Exception):
     def __init__(self, output):
