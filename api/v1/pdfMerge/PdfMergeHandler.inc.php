@@ -9,10 +9,6 @@ class PdfMergeHandler extends APIHandler
 		$this->_endpoints = [
 			'GET' => [
 				[
-					'pattern' => $this->getEndpointPattern(),
-					'handler' => [$this, 'helloWorld']
-				],
-				[
 					'pattern' => $this->getEndpointPattern() . '/insert/{submissionId}/{stageId}/{reviewRoundId}/{userId}',
 					'handler' => [$this, 'insertCopyAndDelete'],
 					'roles' => $roles
@@ -51,11 +47,6 @@ class PdfMergeHandler extends APIHandler
 		return parent::authorize($request, $args, $roleAssignments);
 	}
 
-	function helloWorld($request, $response)
-	{
-		return $response->withJson(array('ping' => 'pong'), 200);
-	}
-
 	function insertCopyAndDelete($request, $response, $args)
 	{
 		$submissionId = $args['submissionId'];
@@ -75,7 +66,7 @@ class PdfMergeHandler extends APIHandler
 		$submissionFile->setFileType('application/pdf');
 		$submissionFile->setGenreId(12);
 		$submissionFile->setFileSize(filesize($filename));
-		$submissionFile->setOriginalFileName('MergedContents.pdf');
+		$submissionFile->setOriginalFileName($submissionId . '_MergedContents.pdf');
 
 		$submissionFile->setFileStage(2);
 		if ($stageId == "3") {
