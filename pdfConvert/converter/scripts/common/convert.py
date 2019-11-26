@@ -2,9 +2,14 @@ import sys
 import subprocess
 import re
 import logging
-
+import shutil
 
 def convert_to(folder, filename, timeout=None):
+    if filename.endswith('.pdf'):
+        shutil.copyfile(folder + '/' + filename, folder + '/converted/' + filename)
+        return folder + '/converted/' + filename
+
+
     args = [libreoffice_exec(), '--headless', '--convert-to', 'pdf',
             '--outdir', folder + '/converted', folder + '/' + filename]
 

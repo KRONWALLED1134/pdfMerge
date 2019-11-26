@@ -5,7 +5,7 @@ import io
 from uuid import uuid4
 from flask import Flask, render_template, request, jsonify, send_from_directory, send_file
 from subprocess import TimeoutExpired
-from common.docx2pdf import LibreOfficeError, convert_to
+from common.convert import LibreOfficeError, convert_to
 from common.errors import RestAPIError, InternalServerErrorError
 from common.files import save_to
 from werkzeug.serving import run_simple
@@ -20,32 +20,27 @@ app = Flask(__name__, static_url_path='')
 app.config['APPLICATION_ROOT'] = '/converter'
 
 
-@app.after_request  # blueprint can also be app~~
+@app.after_request
 def after_request(response):
     header = response.headers
     header['Access-Control-Allow-Origin'] = '*'
     header['Access-Control-Allow-Headers'] = '*'
     return response
 
-
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    return 'hello world'
-
+    return 'converter'
 
 @app.route('/convert', methods=['GET'])
 def upload_file_get():
-    app.logger.info('Testlog')
     return 'convert here'
 
-
-@app.route('/convert', methods=['POST'])
+@app.route('/convert', methods=['POST', 'OPTIONS'])
 def upload_file():
-    app.logger.info(request.headers)
-    app.logger.info(request.cookies)
-    app.logger.info(request.json)
+    if request.method == "OPTIONS":
+        return _build_cors_prelight_response()
+
     fileList = request.get_json()
-    app.logger.info(fileList)
     results = []
     submissionId = 0
     stageId = 0
@@ -92,10 +87,11 @@ def upload_file():
             raise InternalServerErrorError(
                 {'message': 'Timeout when converting file to PDF'})
 
+    failedFiles = []
     merger = PdfFileMerger()
     app.logger.info('start merging')
     for file in results:
-        merger.append(fileobj=open(file, 'rb'))
+         merger.append(fileobj=open(file, 'rb'))
 
     app.logger.info('finished merging')
 
@@ -109,9 +105,8 @@ def upload_file():
 
     output = open(path, 'wb')
     merger.write(output)
-
-    return jsonify({'merge': 'success'})
-
+    
+    return _corsify_actual_response(jsonify({'merge': 'success'}))
 
 @app.errorhandler(500)
 def handle_500_error():
@@ -123,7 +118,7 @@ def handle_rest_api_error(error):
     return error.to_response()
 
 
-app.wsgi_app = DispatcherMiddleware(index, {'/converter': app.wsgi_app})
+app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {'/converter': app.wsgi_app})
 
 if __name__ != '__main__':
     gunicorn_logger = logging.getLogger('gunicorn.error')
@@ -132,3 +127,14 @@ if __name__ != '__main__':
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', threaded=True)
+
+def _build_cors_prelight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
+
+def _corsify_actual_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response

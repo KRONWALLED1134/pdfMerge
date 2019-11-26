@@ -7,7 +7,7 @@ services:
       - '5000:5000'
     volumes:
       - ./converter/scripts:/converter/scripts
-      - <Your OJS private file directory>:/var/www/files  
+      - /srv/excli/var/www/files:/var/www/files  
     environment:
       - FLASK_DEBUG
     networks:
