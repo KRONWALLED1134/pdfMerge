@@ -1,17 +1,17 @@
 <?php
 /**
- * @file plugins/generic/pdfMerge/PdfMergeGatewayPlugin.inc.php
- *
- * Copyright (c) 2014-2019 Simon Fraser University
- * Copyright (c) 2003-2019 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
- * @class PdfMergeGatewayPlugin
- * @ingroup plugins_generic_pdfMerge
- *
- * @brief Gateway component of pdfMerge plugin
- *
- */
+* @file plugins/generic/pdfMerge/PdfMergeGateway.inc.php
+*
+* Copyright (c) Torben Richter
+* Distributed under the GNU GPL v2 or later. For full terms see the LICENSE file.
+*
+* @class PdfMergeGatewayPlugin
+* @ingroup plugins_generic_pdfMerge
+*
+* @brief Gateway component of pdfMerge plugin
+*
+*/
+
 import('lib.pkp.classes.plugins.GatewayPlugin');
 class PdfMergeGatewayPlugin extends GatewayPlugin {
 	/** @var PdfMergePlugin Parent plugin */

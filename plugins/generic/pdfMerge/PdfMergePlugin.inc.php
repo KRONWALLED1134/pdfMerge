@@ -1,4 +1,17 @@
 <?php
+/**
+* @file plugins/generic/pdfMerge/PdfMergePlugin.inc.php
+*
+* Copyright (c) Torben Richter
+* Distributed under the GNU GPL v2 or later. For full terms see the LICENSE file.
+*
+* @class PdfMergePlugin
+* @ingroup plugins_generic_pdfMerge
+*
+* @brief Generic component of pdfMerge plugin
+*
+*/
+
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('lib.pkp.classes.submission.SubmissionFile');
 

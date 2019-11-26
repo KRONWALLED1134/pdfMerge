@@ -1,3 +1,11 @@
+{**
+ * plugins/generic/pdfMerge/templates/block.tpl
+ *
+ * Copyright (c) Torben Richter
+ * Distributed under the GNU GPL v2 or later. For full terms see the LICENSE file.
+ *
+ * PdfMerge modal dialogue
+ *}
 <div id="pdfMergeDiv" class="pkp_tab_actions" style="display: block;">
     <ul class="pkp_workflow_decisions">
         <li>
