@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 RUN apt-get update
 RUN apt-get install -y python3 python3-pip build-essential libssl-dev libffi-dev python-dev
-RUN apt-get install -y libreoffice-base
+RUN apt-get install -y libreoffice
 RUN pip3 install gunicorn flask requests pypdf2 flask-cors
 
 ENV LC_ALL=C.UTF-8

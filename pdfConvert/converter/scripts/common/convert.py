@@ -3,8 +3,12 @@ import subprocess
 import re
 import logging
 import shutil
+import os
 
 def convert_to(folder, filename, timeout=None):
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    os.makedirs(folder + '/converted', exist_ok=True)
+
     if filename.endswith('.pdf'):
         shutil.copyfile(folder + '/' + filename, folder + '/converted/' + filename)
         return folder + '/converted/' + filename
