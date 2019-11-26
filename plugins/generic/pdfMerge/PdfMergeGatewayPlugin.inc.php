@@ -77,15 +77,11 @@ class PdfMergeGatewayPlugin extends GatewayPlugin {
 
 		if (!$this->_parentPlugin->getEnabled($journal->getId())) return false;
 
-        $submissionId = array_shift($args);
+        	$submissionId = array_shift($args);
 		$stageId = array_shift($args);
-		$userId = array_shift($args);
 		$reviewRoundId = array_shift($args);
+		$userId = array_shift($args);
 
-		if (isset($args['reviewRoundId'])) {
-			$reviewRoundId = $args['reviewRoundId'];
-        }
-        
 		$submissionFileDao = DAORegistry::getDAO('SubmissionFileDAO');
 		$submissionFile = new SubmissionFile();
 
@@ -113,7 +109,7 @@ class PdfMergeGatewayPlugin extends GatewayPlugin {
 		$submissionFileManager = new SubmissionFileManager(1, $submissionId);
 		$sourceFile = $submissionFileManager->getBasePath() . $submissionFile->_fileStageToPath($submissionFile->getFileStage()) . '/converted/merged.pdf';
 		$submissionFile = $submissionFileDao->insertObject($submissionFile, $sourceFile);
-
+		
 		if ($reviewRoundId != 0) {
 			$reviewRoundDao = DAORegistry::getDAO('ReviewRoundDAO');
 			$reviewRound = $reviewRoundDao->getById($reviewRoundId);

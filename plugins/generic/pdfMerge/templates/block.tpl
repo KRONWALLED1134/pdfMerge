@@ -135,11 +135,9 @@
             basePath = url.toString();
             var ojsBasePath = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
             {/literal}
-            var endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$userId}"
-            endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/{$userId}"
+            endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/0/{$userId}"
 
             {if isset($reviewRoundId)}
-                endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$reviewRoundId}/{$userId}";
                 endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/{$reviewRoundId}/{$userId}"
             {/if}
             {literal}
