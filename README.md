@@ -5,7 +5,7 @@ For this a button is added to the submission / review workflow tabs when viewing
 
 ### Prerequisites
 
-- OJS 3.0.x
+- OJS 3.2.0
 - Docker
 
 ### Installing
@@ -14,12 +14,6 @@ Move the pdfMerge folder to your plugins/generic directory
 
 ```
 mv plugins/generic/pdfMerge /path/to/your/ojs/installation/plugins/generic
-```
-
-Move the pdfMerge folder to your api/v1 directory
-
-```
-mv api/v1/pdfMerge /path/to/your/ojs/installation/api/v1
 ```
 
 Register the plugin
