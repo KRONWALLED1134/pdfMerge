@@ -108,67 +108,67 @@
             $('#fileListPanel').hide();
             $('#fileListPanelSpinner').show();
 
-            var fileList = {/ literal
-        } { $fileList |@json_encode }; { literal }
-        var idList = [];
+            var fileList = {/literal} {$fileList|json_encode}; {literal}
+            var idList = [];
 
-        fileList.forEach(function (file, index) {
-            if ($('#checkForFile-' + (index + 1)).is(':checked')) {
-                idList.push({ 'order': parseInt($('#selectForFile-' + (index + 1)).val()), 'fileId': file._data.fileId, 'genreId': file._data.genreId, 'revision': file._data.revision, 'dateUploaded': file._data.dateUploaded, 'submissionId': {/ literal } { $submissionId } { literal }, 'stageId': {/ literal} { $stageId } { literal }, 'fileName': file._data.name.en_US
-        });
-    }
-                });
+            fileList.forEach(function (file, index) {
+                if ($('#checkForFile-' + (index + 1)).is(':checked')) {
+                    idList.push({ 'order': parseInt($('#selectForFile-' + (index + 1)).val()), 'fileId': file._data.fileId, 'genreId': file._data.genreId, 'revision': file._data.revision, 'dateUploaded': file._data.dateUploaded, 'submissionId': {/literal} {$submissionId} {literal}, 'stageId': {/literal} {$stageId} {literal}, 'fileName': file._data.name.en_US })
+                }
+            });
 
-    if (idList.length <= 1) {
-        $('#errorMessageForEmptyOrSingleValueList').show();
-        $('#startMergeButton').show();
-        $('#fileListPanel').show();
-        $('#fileListPanelSpinner').hide();
-        return;
-    }
+            if (idList.length <= 1) {
+                $('#errorMessageForEmptyOrSingleValueList').show();
+                $('#startMergeButton').show();
+                $('#fileListPanel').show();
+                $('#fileListPanelSpinner').hide();
+                return;
+            }
 
-    idList.sort(function (a, b) { return a.order - b.order });
+            idList.sort(function (a, b) { return a.order - b.order });
+            
+            var basePath = window.location.protocol + "//" + window.location.host;
+            // Remove port number from basePath.
+            // TODO --> Make endpoint URLs for converter configurable..
+            var url = new URL(basePath);
+            url.port = '';
+            basePath = url.toString();
+            var ojsBasePath = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
+            {/literal}
+            var endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$userId}"
+            endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/{$userId}"
 
-    var basePath = window.location.protocol + "//" + window.location.host;
-    var ojsBasePath = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
-    {
-        /literal}
-
-        var endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$userId}"
-
-        { if isset($reviewRoundId)}
-        endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$reviewRoundId}/{$userId}"
-        {
-            /if}
-            { literal }
+            {if isset($reviewRoundId)}
+                endpoint = "/excli/api/v1/pdfMerge/insert/{$submissionId}/{$stageId}/{$reviewRoundId}/{$userId}";
+                endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/{$reviewRoundId}/{$userId}"
+            {/if}
+            {literal}
 
             $.ajax({
                 method: "POST",
                 contentType: "application/json",
-                url: basePath + "/converter/convert",
-                data: JSON.stringify({ 'files': idList, 'apiKey': 'b8b1457f-99b8-4979-9e30-5316859f5981' })
-            })
-                .success(function (response) {
-                    // TODO --> Remove index.php/excli from basePath while migrating to new nginx server
+                url: basePath + "converter/convert",
+                data: JSON.stringify({ 'files': idList, 'apiKey': 'b8b1457f-99b8-4979-9e30-5316859f5981' }),
+                success: function (response) {
                     $.ajax({
                         method: "GET",
                         contentType: "application/json",
-                        url: {/ literal
-                    }ojsBasePath + endpoint{ literal }
+                        url: ojsBasePath + endpoint,
+                        success: function(response) {
+                            $('#successMessage').show();
+                            $('#refreshButton').show();
+                            $('#fileListPanelSpinner').hide();
+                        },
+                        error: function (response) {
+                            $('#startMergeButton').show();
+                        $('#errorMessage').show();
+                        $('#fileListPanel').show();
+                        $('#fileListPanelSpinner').hide();
+                        }
                     })
-                .success(function (response) {
-                    $('#successMessage').show();
-                    $('#refreshButton').show();
-                    $('#fileListPanelSpinner').hide();
-                })
-                .error(function (response) {
-                    $('#startMergeButton').show();
-                    $('#errorMessage').show();
-                    $('#fileListPanel').show();
-                    $('#fileListPanelSpinner').hide();
-                });
-        });
-    }
-		});
+                }
+            })
+        }
+    });
 </script>
 {/literal}

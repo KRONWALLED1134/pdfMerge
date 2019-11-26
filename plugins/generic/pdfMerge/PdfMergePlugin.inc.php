@@ -29,9 +29,11 @@ class PdfMergePlugin extends GenericPlugin
 		$this->addLocaleData();
 		if (parent::register($category, $path, $mainContextId)) {
 			if ($this->getEnabled()) {
-				HookRegistry::register('Templates::Admin::Submission::Step1', array($this, 'pdfMergeCallback'), HOOK_SEQUENCE_LATE);
-				HookRegistry::register('Templates::Admin::Submission::Step1::PdfMergeSuccessful', array($this, 'pdfMergeSuccessCallback'), HOOK_SEQUENCE_LATE);
+				HookRegistry::register('PdfMerge::Show', array($this, 'pdfMergeCallback'), HOOK_SEQUENCE_LATE);
 				$this->_registerTemplateResource();
+
+				$this->import('PdfMergeGatewayPlugin');
+				PluginRegistry::register('gateways', new PdfMergeGatewayPlugin($this), $this->getPluginPath());
 			}
 			return true;
 		}
@@ -128,7 +130,7 @@ class PdfMergePlugin extends GenericPlugin
 			'userId' => $userId
 		));
 
-		$output = $templateMgr->display($this->getTemplatePath() . 'templates/block.tpl');
+		$output = $templateMgr->display($this->getTemplateResource('block.tpl'));
 		return false;
 	}
 }
