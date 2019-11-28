@@ -1,3 +1,4 @@
+<?php
 /**
  * @file plugins/generic/pdfMerge/index.php
  *
@@ -7,6 +8,6 @@
  * @ingroup plugins_generic_pdfMerge
  *
  */
-<?php
-    require_once('PdfMergePlugin.inc.php');
-    return new PdfMergePlugin();
+require_once('PdfMergePlugin.inc.php');
+return new PdfMergePlugin();
+?>
