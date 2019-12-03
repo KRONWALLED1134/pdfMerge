@@ -13,4 +13,5 @@
     <message key="plugins.pdfMerge.modal.refreshPage">Refresh page</message>
     <message key="plugins.pdfMerge.modal.error.unknownError">Unknown error occured. For help contact your local IT.</message>
     <message key="plugins.pdfMerge.modal.error.listEmptyOrSingleValue">Please choose at minimum 2 files to merge.</message>
+    <message key="plugins.generic.pdfMerge.converterUrl">URL where your converter / merger docker container is reachable. For example: http://your.path.to.ojs/converter/convert</message>
 </locale>

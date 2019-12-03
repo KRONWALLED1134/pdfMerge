@@ -134,13 +134,7 @@
             }
 
             idList.sort(function (a, b) { return a.order - b.order });
-            
-            var basePath = window.location.protocol + "//" + window.location.host;
-            // Remove port number from basePath.
-            // TODO --> Make endpoint URLs for converter configurable..
-            var url = new URL(basePath);
-            url.port = '';
-            basePath = url.toString();
+
             var ojsBasePath = window.location.protocol + "//" + window.location.host + "/" + window.location.pathname.split('/')[1];
             {/literal}
             endpoint = "/excli/gateway/plugin/PdfMergeGatewayPlugin/{$submissionId}/{$stageId}/0/{$userId}"
@@ -153,7 +147,7 @@
             $.ajax({
                 method: "POST",
                 contentType: "application/json",
-                url: basePath + "converter/convert",
+                url: {/literal} "{$converterUrl}", {literal}
                 data: JSON.stringify({ 'files': idList, 'apiKey': 'b8b1457f-99b8-4979-9e30-5316859f5981' }),
                 success: function (response) {
                     $.ajax({

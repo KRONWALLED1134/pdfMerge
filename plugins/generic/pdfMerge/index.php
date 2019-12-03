@@ -8,6 +8,7 @@
  * @ingroup plugins_generic_pdfMerge
  *
  */
+
 require_once('PdfMergePlugin.inc.php');
 return new PdfMergePlugin();
 ?>

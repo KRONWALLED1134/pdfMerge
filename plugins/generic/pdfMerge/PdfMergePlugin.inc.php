@@ -70,6 +70,62 @@ class PdfMergePlugin extends GenericPlugin
 		return __('plugins.generic.PdfMergePlugin.description');
 	}
 
+	public function getActions($request, $actionArgs) {
+		$actions = parent::getActions($request, $actionArgs);
+		if (!$this->getEnabled()) {
+			return $actions;
+		}
+
+		$router = $request->getRouter();
+		import('lib.pkp.classes.linkAction.request.AjaxModal');
+		$linkAction = new LinkAction(
+			'settings',
+			new AjaxModal(
+				$router->url(
+					$request,
+					null,
+					null,
+					'manage',
+					null,
+					array(
+						'verb' => 'settings',
+						'plugin' => $this->getName(),
+						'category' => 'generic'
+					)
+				),
+				$this->getDisplayName()
+			),
+			__('manager.plugins.settings'),
+			null
+		);
+
+		array_unshift($actions, $linkAction);
+
+		return $actions;
+	}
+
+	public function manage($args, $request) {
+		switch ($request->getUserVar('verb')) {
+
+		case 'settings':
+			$this->import('PdfMergeSettingsForm');
+			$form = new PdfMergeSettingsForm($this);
+	
+			if (!$request->getUserVar('save')) {
+				$form->initData();
+					return new JSONMessage(true, $form->fetch($request));
+			}
+	
+			$form->readInputData();
+			if ($form->validate()) {
+				$form->execute();
+				return new JSONMessage(true);
+			}
+		}
+
+		return parent::manage($args, $request);
+	}
+
 	function loadSubmissionFiles($params)
 	{
 		$submissionId = $params['submissionId'];
@@ -134,13 +190,17 @@ class PdfMergePlugin extends GenericPlugin
 
 		$userId = $session->getUserId();
 
+		$contextId = $context->getId();
+    	$converterUrl = $this->getSetting($contextId, 'converterUrl');
+
 		$templateMgr->assign(array(
 			'submissionId' => $params['submissionId'],
 			'stageId' => $params['stageId'],
 			'fileList' => $fileList,
 			'dropdownValues' => $dropdownValues,
 			'isUploaded' => false,
-			'userId' => $userId
+			'userId' => $userId,
+			'converterUrl' => $converterUrl
 		));
 
 		$output = $templateMgr->display($this->getTemplateResource('block.tpl'));
