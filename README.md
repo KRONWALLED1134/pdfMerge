@@ -65,9 +65,7 @@ If you want to contribute to this plugin please open a pull request.
 
 ## Authors
 
-* **Torben Richter** - *Initial work*
-
-See also the list of [contributors](https://github.com/KRONWALLED1134/pdfMerge/contributors) who participated in this project.
+See the list of [contributors](https://github.com/KRONWALLED1134/pdfMerge/contributors) who participated in this project.
 
 ## License
 This project is licensed under the GNU General Public License v2 - see the [LICENSE](LICENSE) file for details
